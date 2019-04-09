@@ -1,0 +1,8 @@
+<resources>
+    <string name="app_name">ITSPartnerTestCase</string>
+
+    <string name="login_field_hint">login</string>
+    <string name="password_field_hint">password</string>
+    <string name="enter_button_text">enter</string>
+    <string name="back_button_text">back</string>
+</resources>
