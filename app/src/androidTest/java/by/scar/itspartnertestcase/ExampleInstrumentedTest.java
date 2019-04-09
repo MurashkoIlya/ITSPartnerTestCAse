@@ -27,10 +27,18 @@ public class ExampleInstrumentedTest{
     private static final int LAUNCH_TIMEOUT = 5000;
     private final String EDITTEXT_CLASS_NAME = "android.widget.EditText";
     private final String BUTTON_CLASS_NAME = "android.widget.Button";
-
-    private final String BUTTON_RESOURCE_ID = "by.scar.itspartnertestcase:id/back_button";
+    private final String TRUE_LOGIN_PASSWORD = "test";
+    private final String FALSE_LOGIN_PASSWORD = "not test";
+    private final String LOGIN = "login";
+    private final String PASSWORD = "password";
+    private final String BACK = "BACK";
+    private final String BACK_BUTTON_RESOURCE_ID = "by.scar.itspartnertestcase:id/back_button";
 
     private UiDevice device;
+
+    private UiObject loginField;
+    private UiObject passwordField;
+    private UiObject backButton;
 
     @Before
     public void startAppFromHomeScreen() {
@@ -55,31 +63,44 @@ public class ExampleInstrumentedTest{
 
     @Test
     public void firstTestCase() throws UiObjectNotFoundException {
-        setFields("test", "test");
+        initFields();
+        setFields(TRUE_LOGIN_PASSWORD, TRUE_LOGIN_PASSWORD);
         checkSecondScreen();
     }
 
     @Test
     public void secondTestCase() throws UiObjectNotFoundException {
-        setFields("not test", "not test");
-        checkFirstScreen("not test", "not test");
+        initFields();
+        setFields(FALSE_LOGIN_PASSWORD, FALSE_LOGIN_PASSWORD);
+        checkFirstScreen(FALSE_LOGIN_PASSWORD, FALSE_LOGIN_PASSWORD);
     }
 
     @Test
     public void thirdTestCase() throws UiObjectNotFoundException {
-        setFields("test", "test");
+        initFields();
+        setFields(TRUE_LOGIN_PASSWORD, TRUE_LOGIN_PASSWORD);
         checkSecondScreen();
+        initBackButton();
         secondScreenButtonClick();
-        checkFirstScreen("login", "password");
+        checkFirstScreen(LOGIN, PASSWORD);
+    }
+
+    public void initFields(){
+        loginField = getUiObjectByDescription(EDITTEXT_CLASS_NAME, LOGIN);
+        passwordField = getUiObjectByDescription(EDITTEXT_CLASS_NAME, PASSWORD);
+    }
+
+    public void initBackButton(){
+        backButton = getUiObjectByRecourseId(EDITTEXT_CLASS_NAME, BACK_BUTTON_RESOURCE_ID);
     }
 
     public void setFields(String login, String password) throws UiObjectNotFoundException {
-        getUiObjectByDescription(EDITTEXT_CLASS_NAME, "login").setText(login);
-        getUiObjectByDescription(EDITTEXT_CLASS_NAME, "password").setText(password);
+        loginField.setText(login);
+        passwordField.setText(password);
     }
 
     public void secondScreenButtonClick() throws UiObjectNotFoundException {
-        getUiOblectByResourceId(BUTTON_CLASS_NAME, BUTTON_RESOURCE_ID).clickAndWaitForNewWindow();
+        backButton.clickAndWaitForNewWindow();
     }
 
     public void checkFirstScreen(String login, String password) {
@@ -88,14 +109,14 @@ public class ExampleInstrumentedTest{
     }
 
     public void checkSecondScreen() {
-        assertTrue(getUiObjectByDescription(BUTTON_CLASS_NAME, "BACK").exists());
+        assertTrue(getUiObjectByDescription(BUTTON_CLASS_NAME, BACK).exists());
     }
 
     public UiObject getUiObjectByDescription(String className, String description){
         return device.findObject(new UiSelector().className(className).text(description));
     }
 
-    public UiObject getUiOblectByResourceId(String className, String resourceId){
+    public UiObject getUiObjectByRecourseId(String className, String resourceId){
         return device.findObject(new UiSelector().className(className).resourceId(resourceId));
     }
 }
