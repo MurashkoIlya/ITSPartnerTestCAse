@@ -27,18 +27,14 @@ public class ExampleInstrumentedTest{
     private static final int LAUNCH_TIMEOUT = 5000;
     private final String EDITTEXT_CLASS_NAME = "android.widget.EditText";
     private final String BUTTON_CLASS_NAME = "android.widget.Button";
+    private final String LOGIN_FIELD_RESOURCE_ID = "by.scar.itspartnertestcase:id/login_field";
+    private final String PASSWORD_FIELD_RESOURCE_ID = "by.scar.itspartnertestcase:id/password_field";
+    private final String BACK_BUTTON_RESOURCE_ID = "by.scar.itspartnertestcase:id/back_button";
     private final String TRUE_LOGIN_PASSWORD = "test";
     private final String FALSE_LOGIN_PASSWORD = "not test";
-    private final String LOGIN = "login";
-    private final String PASSWORD = "password";
-    private final String BACK = "BACK";
-    private final String BACK_BUTTON_RESOURCE_ID = "by.scar.itspartnertestcase:id/back_button";
+
 
     private UiDevice device;
-
-    private UiObject loginField;
-    private UiObject passwordField;
-    private UiObject backButton;
 
     @Before
     public void startAppFromHomeScreen() {
@@ -63,60 +59,43 @@ public class ExampleInstrumentedTest{
 
     @Test
     public void firstTestCase() throws UiObjectNotFoundException {
-        initFields();
         setFields(TRUE_LOGIN_PASSWORD, TRUE_LOGIN_PASSWORD);
         checkSecondScreen();
     }
 
     @Test
     public void secondTestCase() throws UiObjectNotFoundException {
-        initFields();
         setFields(FALSE_LOGIN_PASSWORD, FALSE_LOGIN_PASSWORD);
-        checkFirstScreen(FALSE_LOGIN_PASSWORD, FALSE_LOGIN_PASSWORD);
+        checkFirstScreen(LOGIN_FIELD_RESOURCE_ID, PASSWORD_FIELD_RESOURCE_ID);
     }
 
     @Test
     public void thirdTestCase() throws UiObjectNotFoundException {
-        initFields();
         setFields(TRUE_LOGIN_PASSWORD, TRUE_LOGIN_PASSWORD);
         checkSecondScreen();
-        initBackButton();
         secondScreenButtonClick();
-        checkFirstScreen(LOGIN, PASSWORD);
-    }
-
-    public void initFields(){
-        loginField = getUiObjectByDescription(EDITTEXT_CLASS_NAME, LOGIN);
-        passwordField = getUiObjectByDescription(EDITTEXT_CLASS_NAME, PASSWORD);
-    }
-
-    public void initBackButton(){
-        backButton = getUiObjectByRecourseId(EDITTEXT_CLASS_NAME, BACK_BUTTON_RESOURCE_ID);
+        checkFirstScreen(LOGIN_FIELD_RESOURCE_ID, PASSWORD_FIELD_RESOURCE_ID);
     }
 
     public void setFields(String login, String password) throws UiObjectNotFoundException {
-        loginField.setText(login);
-        passwordField.setText(password);
+        getUiObjectByResourceId(EDITTEXT_CLASS_NAME, LOGIN_FIELD_RESOURCE_ID).setText(login);
+        getUiObjectByResourceId(EDITTEXT_CLASS_NAME, PASSWORD_FIELD_RESOURCE_ID).setText(password);
     }
 
     public void secondScreenButtonClick() throws UiObjectNotFoundException {
-        backButton.clickAndWaitForNewWindow();
+        getUiObjectByResourceId(BUTTON_CLASS_NAME, BACK_BUTTON_RESOURCE_ID).clickAndWaitForNewWindow();
     }
 
     public void checkFirstScreen(String login, String password) {
-        assertTrue(getUiObjectByDescription(EDITTEXT_CLASS_NAME, login).exists());
-        assertTrue(getUiObjectByDescription(EDITTEXT_CLASS_NAME, password).exists());
+        assertTrue(getUiObjectByResourceId(EDITTEXT_CLASS_NAME, login).exists());
+        assertTrue(getUiObjectByResourceId(EDITTEXT_CLASS_NAME, password).exists());
     }
 
     public void checkSecondScreen() {
-        assertTrue(getUiObjectByDescription(BUTTON_CLASS_NAME, BACK).exists());
+        assertTrue(getUiObjectByResourceId(BUTTON_CLASS_NAME, BACK_BUTTON_RESOURCE_ID).exists());
     }
 
-    public UiObject getUiObjectByDescription(String className, String description){
-        return device.findObject(new UiSelector().className(className).text(description));
-    }
-
-    public UiObject getUiObjectByRecourseId(String className, String resourceId){
+    public UiObject getUiObjectByResourceId(String className, String resourceId){
         return device.findObject(new UiSelector().className(className).resourceId(resourceId));
     }
 }
